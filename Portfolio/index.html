@@ -1,0 +1,927 @@
+
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geordy D. SCIENTIA — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=Barlow:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   THEMES
+══════════════════════════════════════════════ */
+:root,[data-theme="dark"]{
+  --bg:#050505;
+  --bg2:#0a0a0a;
+  --white:#f0f0f0;
+  --green:#00ff66;
+  --red:#ff2244;
+  --muted:#444;
+  --muted2:#2a2a2a;
+  --border:#1c1c1c;
+  --border2:#222;
+  --text:#f0f0f0;
+  --text-dim:#555;
+  --card-bg:#0d0d0d;
+  --overlay:rgba(5,5,5,.92);
+}
+[data-theme="light"]{
+  --bg:#f5f5f0;
+  --bg2:#ebebeb;
+  --white:#111111;
+  --green:#009944;
+  --red:#cc1133;
+  --muted:#888;
+  --muted2:#ccc;
+  --border:#d5d5d5;
+  --border2:#ddd;
+  --text:#111111;
+  --text-dim:#999;
+  --card-bg:#ffffff;
+  --overlay:rgba(245,245,240,.95);
+}
+
+/* ══ RESET ══ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Barlow',sans-serif;font-weight:700;
+  overflow-x:hidden;cursor:none;
+  transition:background .4s,color .4s;
+}
+a{color:inherit;text-decoration:none;}
+strong{font-weight:900;}
+
+/* ══ CURSOR (desktop only) ══ */
+#cur,#cur2{display:none;}
+@media(pointer:fine){
+  #cur{display:block;position:fixed;width:6px;height:6px;background:var(--green);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:background .2s;}
+  #cur2{display:block;position:fixed;width:28px;height:28px;border:1px solid var(--green);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.35;}
+  *{cursor:none!important;}
+}
+
+/* ══ LOADER ══ */
+#loader{position:fixed;inset:0;background:var(--bg);z-index:9500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;transition:opacity .8s;}
+.ld-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,10vw,6rem);letter-spacing:.12em;color:var(--text);}
+.ld-name span{color:var(--green);}
+.ld-bar-wrap{width:180px;height:1px;background:var(--border);}
+.ld-bar{height:1px;background:var(--green);width:0;}
+.ld-pct{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);}
+
+/* ══ TOPBAR ══ */
+#topbar{
+  position:fixed;top:0;left:0;right:0;z-index:600;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0 clamp(1rem,3vw,2.5rem);height:54px;
+  border-bottom:1px solid var(--border);
+  background:var(--overlay);backdrop-filter:blur(12px);
+  transition:transform .4s cubic-bezier(.77,0,.18,1),opacity .4s,background .4s,border-color .4s;
+}
+#topbar.hidden{transform:translateY(-100%);opacity:0;pointer-events:none;}
+
+.top-logo{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--green);letter-spacing:.2em;flex-shrink:0;}
+
+/* desktop nav */
+.top-nav{display:flex;align-items:center;gap:0;}
+.top-nav a{
+  font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--muted);
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:0 1rem;height:54px;display:flex;align-items:center;
+  border-left:1px solid var(--border);
+  transition:color .18s,background .18s,border-color .4s;
+}
+.top-nav a:hover{color:var(--text);background:rgba(128,128,128,.06);}
+.top-nav a:last-child{border-right:1px solid var(--border);}
+
+/* right cluster */
+.top-right{display:flex;align-items:center;gap:.8rem;flex-shrink:0;padding-left:.8rem;}
+
+.top-dispo{display:flex;align-items:center;gap:.5rem;font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--green);letter-spacing:.14em;}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;animation:blink 1.4s infinite;}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,255,102,.5)}60%{opacity:.15;box-shadow:0 0 0 5px rgba(0,255,102,0)}}
+
+/* theme toggle */
+.theme-btn{
+  width:36px;height:36px;border:1px solid var(--border);background:transparent;
+  color:var(--muted);display:flex;align-items:center;justify-content:center;
+  font-size:.95rem;cursor:pointer;transition:all .2s;flex-shrink:0;
+  border-radius:2px;
+}
+.theme-btn:hover{border-color:var(--green);color:var(--green);}
+
+/* mobile hamburger */
+.burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:6px;border:1px solid var(--border);background:transparent;}
+.burger span{display:block;width:20px;height:1px;background:var(--text);transition:all .3s;}
+.burger.open span:nth-child(1){transform:translateY(5px) rotate(45deg);}
+.burger.open span:nth-child(2){opacity:0;}
+.burger.open span:nth-child(3){transform:translateY(-5px) rotate(-45deg);}
+
+/* mobile menu overlay */
+#mobile-menu{
+  position:fixed;inset:0;top:54px;z-index:590;
+  background:var(--overlay);backdrop-filter:blur(16px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+  opacity:0;pointer-events:none;transform:translateY(-8px);
+  transition:opacity .3s,transform .3s;
+}
+#mobile-menu.open{opacity:1;pointer-events:all;transform:none;}
+.mobile-nav-link{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,8vw,4rem);
+  letter-spacing:.06em;color:var(--muted);width:100%;text-align:center;
+  padding:1rem 0;border-bottom:1px solid var(--border);
+  transition:color .2s;
+}
+.mobile-nav-link:hover{color:var(--green);}
+
+/* ══ DOT NAV — desktop only ══ */
+#dotnav{position:fixed;right:1.6rem;top:50%;transform:translateY(-50%);z-index:400;display:flex;flex-direction:column;gap:.9rem;}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--muted2);border:1px solid var(--border2);cursor:pointer;transition:all .2s;position:relative;}
+.dot::after{content:attr(data-label);font-family:'Share Tech Mono',monospace;font-size:.5rem;color:var(--muted);position:absolute;right:14px;top:50%;transform:translateY(-50%);white-space:nowrap;opacity:0;transition:opacity .2s;}
+.dot:hover::after,.dot.active::after{opacity:1;}
+.dot.active{background:var(--green);border-color:var(--green);box-shadow:0 0 8px var(--green);}
+
+/* ══ NOISE ══ */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:800;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.025'/%3E%3C/svg%3E");opacity:.2;}
+
+/* ══ SECTIONS ══ */
+section{width:100%;position:relative;padding:clamp(5rem,8vw,8rem) clamp(1.2rem,5vw,5vw) clamp(3rem,5vw,5rem);}
+.scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,102,.004) 2px,rgba(0,255,102,.004) 4px);pointer-events:none;}
+.gbg{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:50px 50px;opacity:.08;pointer-events:none;}
+.sep{display:block;width:100%;height:1px;background:var(--border);transition:background .4s;}
+
+/* SHARED */
+.idx{font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--green);letter-spacing:.25em;display:block;margin-bottom:.5rem;}
+.stitle{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,7vw,6.5rem);line-height:.9;letter-spacing:.03em;margin-bottom:1.4rem;}
+.stitle .r{color:var(--red);}
+.stitle .g{color:var(--green);}
+
+/* binary */
+[data-bin]{opacity:0;transition:opacity .05s;}
+
+/* ══ HERO ══ */
+#s0{min-height:100vh;display:flex;flex-direction:column;justify-content:center;}
+.h-tag{font-family:'Share Tech Mono',monospace;font-size:clamp(.5rem,.7vw+.3rem,.65rem);color:var(--green);letter-spacing:.2em;margin-bottom:1.3rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;}
+.h-tag::before{content:'';width:24px;height:1px;background:var(--green);flex-shrink:0;}
+.h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.8rem,12vw,11rem);line-height:.9;letter-spacing:.02em;}
+.h1 .stroke{color:transparent;-webkit-text-stroke:1.5px var(--text);}
+.h1 .g{color:var(--green);}
+.h-role{font-family:'Share Tech Mono',monospace;font-size:clamp(.65rem,.9vw,.82rem);color:var(--muted);margin:1.4rem 0 .8rem;letter-spacing:.06em;}
+.cur-blink{animation:bl .85s step-end infinite;color:var(--green);}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:0}}
+.h-desc{max-width:460px;font-size:clamp(.8rem,.95vw,.92rem);color:var(--text-dim);line-height:1.85;}
+.h-nums{
+  position:absolute;right:clamp(1.2rem,5vw,5vw);top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:1.6rem;align-items:flex-end;
+}
+.h-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3.5rem);color:var(--text);line-height:1;text-align:right;}
+.h-lbl{font-family:'Share Tech Mono',monospace;font-size:.52rem;color:var(--muted);letter-spacing:.14em;text-align:right;}
+.h-scroll{margin-top:3.5rem;font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.15em;display:flex;align-items:center;gap:.6rem;}
+.h-scroll::after{content:'↓';color:var(--green);animation:bounce 1.6s ease-in-out infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+.h-corner{position:absolute;right:0;bottom:0;font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,12vw,13rem);color:transparent;-webkit-text-stroke:1px var(--border);line-height:1;pointer-events:none;user-select:none;}
+
+/* ══ CV BAND ══ */
+.cv-band{
+  background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:clamp(1.4rem,3vw,2.2rem) clamp(1.2rem,5vw,5vw);
+  display:flex;align-items:center;justify-content:space-between;gap:1.5rem;
+  position:relative;overflow:hidden;flex-wrap:wrap;
+  transition:background .4s,border-color .4s;
+}
+.cv-band::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green);}
+.cv-band-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,3vw,2rem);letter-spacing:.05em;color:var(--text);}
+.cv-band-sub{font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.15em;margin-top:.3rem;}
+.cv-dl-btn{
+  font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.16em;
+  padding:.8rem 2rem;border:1px solid var(--green);color:var(--green);
+  cursor:pointer;transition:all .22s;display:flex;align-items:center;gap:.6rem;
+  background:transparent;text-transform:uppercase;white-space:nowrap;
+}
+.cv-dl-btn:hover{background:var(--green);color:var(--bg);}
+
+/* ══ SKILLS ══ */
+#s1{background:var(--bg2);transition:background .4s;}
+.sk-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.5rem,3vw,3rem);}
+.lang-grid{display:flex;flex-wrap:wrap;gap:.42rem;margin-bottom:1.4rem;}
+.ltag{font-family:'Share Tech Mono',monospace;font-size:.62rem;padding:.28rem .72rem;border:1px solid var(--border);color:var(--muted);border-radius:1px;letter-spacing:.04em;transition:border-color .4s,color .4s;}
+.ltag.core{border-color:rgba(0,255,102,.3);color:var(--green);}
+.ltag.vis{border-color:rgba(255,34,68,.25);color:var(--red);}
+.skills span {display: inline-block;padding: 8px 14px;margin: 5px;border-radius: 20px;background: #111;color: #0ff;border: 1px solid #0ff;transition: 0.3s;}
+.skills span:hover {background: #0ff;color: #000;transform: scale(1.1);}
+.ltag.tool{border-color:rgba(128,128,128,.2);color:var(--muted);}
+.ltag.fw{border-color:rgba(128,128,128,.25);color:var(--muted);}
+.sk-sub{font-family:'Share Tech Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.22em;text-transform:uppercase;margin-bottom:.75rem;margin-top:.15rem;}
+.bars-wrap{display:flex;flex-direction:column;gap:1.15rem;}
+.bar-item{display:flex;flex-direction:column;gap:.4rem;}
+.bar-nm{font-family:'Share Tech Mono',monospace;font-size:.66rem;color:var(--text);letter-spacing:.04em;}
+.bar-track{height:2px;background:var(--border);position:relative;overflow:hidden;border-radius:1px;transition:background .4s;}
+.bar-fill{height:100%;width:0;position:absolute;left:0;top:0;transition:width 1.6s cubic-bezier(.4,0,.2,1);}
+.bar-fill.g{background:linear-gradient(90deg,var(--green),rgba(0,255,102,.2));}
+.bar-fill.r{background:linear-gradient(90deg,var(--red),rgba(255,34,68,.2));}
+.bar-fill.w{background:linear-gradient(90deg,var(--text),rgba(240,240,240,.2));}
+body{margin:0;background:#000;font-family:monospace;}
+.hero{height:100vh;display:flex;justify-content:center;align-items:center;}
+.terminal{width:90%;max-width:900px;height:500px;background:#0d0d0d;border-radius:10px;padding:20px;color:#00ff9c;box-shadow:0 0 20px #00ff9c;overflow-y:auto;}
+.line{margin:5px 0;}
+.input-line{display:flex;}
+input{background:transparent;border:none;outline:none;color:#00ff9c;font-family:monospace;font-size:16px;width:100%;}
+.cursor{display:inline-block;width:10px;background:#00ff9c;margin-left:5px;animation:blink 1s infinite;}
+@keyframes blink{50%{opacity:0;}}
+
+/* ══ PROJECTS ══ */
+#s3{background:var(--card-bg);transition:background .4s;}
+.pr-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.8rem;flex-wrap:wrap;gap:.8rem;}
+.pr-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;height:62vh;min-height:320px;}
+.pr-card{background:var(--bg2);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;cursor:pointer;border:1px solid var(--border);transition:border-color .3s,background .4s;}
+.pr-card:hover{border-color:rgba(0,255,102,.35);}
+.pr-card-img{position:absolute;inset:0;object-fit:cover;width:100%;height:100%;filter:brightness(.17) grayscale(1);transition:filter .5s,transform .7s;}
+.pr-card:hover .pr-card-img{filter:brightness(.36) grayscale(.5);transform:scale(1.05);}
+.pr-card-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(4,4,4,.98) 0%,rgba(4,4,4,.3) 55%,transparent 100%);}
+[data-theme="light"] .pr-card-ov{background:linear-gradient(to top,rgba(245,245,240,.97) 0%,rgba(245,245,240,.3) 55%,transparent 100%);}
+.pr-body{position:relative;z-index:2;padding:1.2rem;}
+.pr-num{font-family:'Share Tech Mono',monospace;font-size:.52rem;color:var(--muted);margin-bottom:.5rem;letter-spacing:.1em;}
+.pr-title{font-size:clamp(.85rem,1.2vw,.98rem);font-weight:800;margin-bottom:.25rem;line-height:1.2;}
+.pr-client{font-family:'Share Tech Mono',monospace;font-size:.55rem;color:var(--green);margin-bottom:.5rem;}
+.pr-stack{display:flex;flex-wrap:wrap;gap:.28rem;}
+.pt{font-family:'Share Tech Mono',monospace;font-size:.5rem;padding:.14rem .44rem;border:1px solid rgba(255,34,68,.25);color:var(--red);border-radius:1px;}
+.pr-hint{font-family:'Share Tech Mono',monospace;font-size:.5rem;color:rgba(0,255,102,.3);margin-top:.5rem;}
+
+/* ══ EDUCATION ══ */
+#s4{min-height:80vh;}
+.ed-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.5rem,4vw,4vw);}
+.ed-item{display:grid;grid-template-columns:68px 1fr;gap:1.2rem;padding:1.4rem 0;border-bottom:1px solid var(--border);}
+.ed-yr{font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--muted);line-height:1.6;padding-top:.15rem;}
+.ed-deg{font-size:clamp(.85rem,1.1vw,.95rem);font-weight:800;margin-bottom:.2rem;line-height:1.3;}
+.ed-sch{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--red);}
+.ed-badge{display:inline-block;margin-top:.4rem;font-family:'Share Tech Mono',monospace;font-size:.5rem;padding:.14rem .48rem;border:1px solid rgba(0,255,102,.25);color:var(--green);}
+.cert-card{border-left:2px solid var(--green);padding:.9rem 1.1rem;margin-bottom:.85rem;background:rgba(0,255,102,.025);}
+.cert-t{font-size:.92rem;font-weight:800;margin-bottom:.18rem;}
+.cert-i{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--green);}
+.cert-d{font-family:'Share Tech Mono',monospace;font-size:.56rem;color:var(--muted);margin-top:.2rem;}
+.info-block{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--muted);line-height:2;margin-top:.6rem;}
+
+/* ══ CONTACT ══ */
+#s5{min-height:90vh;background:var(--card-bg);display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;transition:background .4s;}
+.ct-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,10vw,9rem);line-height:.9;letter-spacing:.02em;margin-bottom:2.2rem;}
+.ct-big .outline{color:transparent;-webkit-text-stroke:1.5px var(--red);}
+.ct-links{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:1.8rem;}
+.clink{font-family:'Share Tech Mono',monospace;font-size:clamp(.55rem,.75vw,.65rem);letter-spacing:.1em;padding:.65rem 1.5rem;border:1px solid var(--border);color:var(--muted);transition:all .2s;display:flex;align-items:center;gap:.5rem;cursor:pointer;}
+.clink:hover,.clink.primary{border-color:var(--green);color:var(--green);}
+.clink.primary:hover{background:var(--green);color:var(--bg);}
+.ct-looking{margin-top:2.2rem;padding:1.2rem 1.6rem;border:1px solid var(--border);display:inline-flex;align-items:center;gap:1rem;background:rgba(0,255,102,.03);}
+.ct-looking-txt{font-family:'Share Tech Mono',monospace;font-size:clamp(.55rem,.75vw,.72rem);color:var(--text);letter-spacing:.1em;line-height:1.7;}
+.ct-looking-txt span{color:var(--green);}
+.ct-deco{position:absolute;right:0;top:0;bottom:0;width:40%;display:flex;align-items:center;justify-content:center;overflow:hidden;pointer-events:none;}
+.ct-deco-txt{font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,14vw,18rem);color:transparent;-webkit-text-stroke:1px var(--border);white-space:nowrap;transform:rotate(-14deg);opacity:.2;animation:flt 9s ease-in-out infinite;}
+@keyframes flt{0%,100%{transform:rotate(-14deg) translateY(0)}50%{transform:rotate(-14deg) translateY(-18px)}}
+
+/* ══ MODAL ══ */
+#modal{position:fixed;inset:0;z-index:6000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.92);backdrop-filter:blur(14px);}
+#modal.open{display:flex;}
+.modal-box{background:var(--bg2);border:1px solid var(--border);width:94%;max-width:860px;max-height:88vh;overflow-y:auto;position:relative;animation:min .3s cubic-bezier(.77,0,.18,1);transition:background .4s;}
+@keyframes min{from{transform:translateY(28px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+.modal-close{position:absolute;top:1.1rem;right:1.4rem;font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--muted);cursor:pointer;letter-spacing:.1em;z-index:2;transition:color .15s;}
+.modal-close:hover{color:var(--red);}
+.modal-img{width:100%;height:clamp(140px,20vw,210px);object-fit:cover;filter:brightness(.28) grayscale(.7);display:block;}
+.modal-body{padding:clamp(1.2rem,3vw,2rem);}
+.m-tag{font-family:'Share Tech Mono',monospace;font-size:.52rem;color:var(--green);letter-spacing:.22em;margin-bottom:.6rem;}
+.m-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,4vw,3.2rem);line-height:1;letter-spacing:.03em;margin-bottom:.3rem;}
+.m-sub{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--red);margin-bottom:1.3rem;}
+.m-desc{font-size:clamp(.76rem,1vw,.84rem);color:var(--muted);line-height:1.8;margin-bottom:1.4rem;border-left:2px solid var(--border);padding-left:1rem;}
+.m-sec{margin-bottom:1.2rem;}
+.m-sec-title{font-family:'Share Tech Mono',monospace;font-size:.52rem;color:var(--muted);letter-spacing:.22em;text-transform:uppercase;margin-bottom:.62rem;padding-bottom:.28rem;border-bottom:1px solid var(--border);}
+.m-tags{display:flex;flex-wrap:wrap;gap:.38rem;}
+.m-tag-item{font-family:'Share Tech Mono',monospace;font-size:.58rem;padding:.2rem .55rem;border:1px solid rgba(0,255,102,.2);color:var(--green);}
+.m-list{list-style:none;}
+.m-list li{font-size:clamp(.74rem,1vw,.82rem);color:var(--muted);padding-left:1rem;position:relative;margin-bottom:.32rem;line-height:1.68;}
+.m-list li::before{content:'>';position:absolute;left:0;color:var(--green);font-family:'Share Tech Mono',monospace;}
+.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+.m-info{border:1px solid var(--border);padding:.8rem;}
+.m-info-lbl{font-family:'Share Tech Mono',monospace;font-size:.48rem;color:var(--muted);letter-spacing:.15em;margin-bottom:.2rem;}
+.m-info-val{font-size:.82rem;font-weight:800;}
+.m-link{color:#00ffcc;text-decoration:none;transition:.3s}
+.m-link:hover{color:#fff;text-shadow:0 0 8px #00ffcc}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE — TABLET  (≤ 900px)
+══════════════════════════════════════════════ */
+@media(max-width:900px){
+  .top-nav{display:none;}
+  .burger{display:flex;}
+  #dotnav{display:none;}
+
+  .sk-grid{grid-template-columns:1fr;}
+  .ex-layout{grid-template-columns:1fr;}
+  .ex-layout>div:first-child{display:flex;flex-wrap:wrap;align-items:flex-end;gap:1.2rem;}
+  .ex-layout>div:first-child .stitle{margin-bottom:0;}
+  .ed-grid{grid-template-columns:1fr;}
+  .pr-cards{grid-template-columns:repeat(2,1fr);height:auto;min-height:0;}
+  .pr-card{min-height:240px;}
+  .h-nums{display:none;}
+  .h-corner{display:none;}
+  .m-grid{grid-template-columns:1fr 1fr;}
+}
+
+/* ══ MOBILE (≤ 560px) ══ */
+@media(max-width:560px){
+  section{padding:4.5rem 1.1rem 2.5rem;}
+  .top-logo{font-size:.6rem;letter-spacing:.12em;}
+  .top-dispo span:not(.sdot){display:none;}/* show only dot on mobile */
+  .pr-cards{grid-template-columns:1fr 1fr;height:auto;}
+  .pr-card{min-height:200px;}
+  .ex-layout{grid-template-columns:1fr;}
+  .ed-grid{grid-template-columns:1fr;}
+  .ct-deco{display:none;}
+  .ct-links{flex-direction:column;}
+  .clink{justify-content:center;}
+  .cv-band{flex-direction:column;align-items:flex-start;gap:1rem;}
+  .m-grid{grid-template-columns:1fr;}
+  .stitle{margin-bottom:1rem;}
+  .modal-img{height:130px;}
+  .h1{font-size:clamp(3.2rem,15vw,5rem);}
+  .ct-big{font-size:clamp(2.5rem,12vw,5rem);}
+}
+
+/* ══ VERY SMALL (≤ 380px) ══ */
+@media(max-width:380px){
+  .pr-cards{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur2"></div>
+
+<div id="loader">
+  <div class="ld-name"><span>S</span>CIENTIA</div>
+  <div class="ld-bar-wrap"><div class="ld-bar" id="lbar"></div></div>
+  <div class="ld-pct" id="lpct">0%</div>
+</div>
+
+<div id="modal">
+  <div class="modal-box" id="modal-box">
+    <div class="modal-close" id="modal-close">[ FERMER × ]</div>
+    <img id="modal-img" class="modal-img" src="" alt="">
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div class="top-logo">DAP // 2026</div>
+
+  <nav class="top-nav">
+    <a href="#s2">Projets</a>
+    <a href="#s3">Cursus</a>
+    <a href="#s4">Contact</a>
+  </nav>
+
+  <!-- hamburger (mobile) -->
+  <div class="burger" id="burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </div>
+
+  <div class="top-right">
+    <div class="top-dispo"><span class="sdot"></span><span>DISPONIBLE</span></div>
+    <button class="theme-btn" id="themeBtn" title="Changer de thème" aria-label="Toggle theme">☀</button>
+  </div>
+</div>
+
+<!-- MOBILE MENU -->
+<div id="mobile-menu">
+  <a class="mobile-nav-link" href="#s3" id="mn-proj">Projets</a>
+  <a class="mobile-nav-link" href="#s4" id="mn-cur">Cursus</a>
+  <a class="mobile-nav-link" href="#s5" id="mn-ct">Contact</a>
+</div>
+
+<!-- DOT NAV -->
+<div id="dotnav">
+  <div class="dot active" data-target="s0" data-label="HOME"></div>
+  <div class="dot" data-target="s1" data-label="STACK"></div>
+  <div class="dot" data-target="s2" data-label="PROJETS"></div>
+  <div class="dot" data-target="s3" data-label="FORMATION"></div>
+  <div class="dot" data-target="s4" data-label="CONTACT"></div>
+</div>
+
+<!-- ══ HERO ══ -->
+<section id="s0">
+  <div class="scan"></div><div class="gbg"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="h-tag" data-bin="FULLSTACK · CONCEPTION · LINUX">FULLSTACK · CONCEPTION · LINUX</div>
+    <h1 class="h1">
+      <span class="g" data-bin="GEO">GEO</span><span data-bin="RDY">RDY</span><br>
+      <span class="stroke" data-bin="DISSAKALOU">DISSAKALOU</span><br>
+      <span data-bin="STUDENT">PARAISO</span>
+    </h1>
+    <p class="h-role">&gt; CyberséCurité · Réseaux · Web · Linux <span class="cur-blink">_</span></p>
+    <p class="h-desc">Étudiant en Licence Ingénierie Intelligente Des Systèmes Informatiques &amp;<br>Passionné par la cybersécurité, les réseaux et le développement web.</p>
+    <div class="h-scroll">SCROLL DOWN</div>
+  </div>
+  <div class="h-nums">
+    <div><div class="h-num" data-bin="6">6</div><div class="h-lbl">LANGAGES</div></div>
+    <div><div class="h-num" data-bin="3">3</div><div class="h-lbl">PROJETS RÉALISÉS</div></div>
+  </div>
+  <div class="h-corner">SCIENTIA</div>
+</section>
+
+<!-- CV BAND -->
+<div class="cv-band">
+  <div>
+    <div class="cv-band-title" data-bin="MON CURRICULUM VITAE">MON CURRICULUM VITAE</div>
+    <div class="cv-band-sub">DERNIÈRE MISE À JOUR · 2026 · FR</div>
+  </div>
+  <a href="Mon CV.pdf" download class="cv-dl-btn">
+    <span>↓</span> TÉLÉCHARGER LE CV
+  </a>
+</div>
+
+<span class="sep"></span>
+
+<!-- ══ SKILLS ══ -->
+<section id="s1">
+  <div class="sk-grid">
+    <div>
+      <span class="idx" data-bin="— 02 / STACK TECHNIQUE">— 02 / STACK TECHNIQUE</span>
+      <h2 class="stitle"><span data-bin="STACK">STACK</span><br><span class="g" data-bin="TECH">TECH</span></h2>
+
+      <div class="sk-sub">// Langages</div>
+      <div class="lang-grid">
+        <span class="ltag core">JavaScript</span>
+        <span class="ltag core">Python</span><span class="ltag core">SQL</span>
+        <span class="ltag core">HTML</span><span class="ltag core">CSS</span>
+        <span class="ltag core">PHP</span>
+      </div>
+
+      <div class="sk-sub">// Initiation à la Cybersécurité</div>
+      <div class="lang-grid">
+        <span class="ltag vis">Kali Linux</span><span class="ltag vis">Wireshark</span>
+        <span class="ltag vis">Aircrack-ng</span>
+        <span class="ltag vis">Pentesting</span>
+      </div>
+
+      <div class="sk-sub">// Outils</div>
+      <div class="lang-grid">
+        <span class="ltag tool">Linux</span>
+        <span class="ltag tool">Git / GitHub</span><span class="ltag tool">MySQL</span>
+        <span class="ltag tool">VS Code</span>
+      </div>
+
+      <div class="sk-sub">// Initiation aux Réseaux</div>
+      <div class="lang-grid">
+        <span class="ltag">CCNA</span><span class="ltag">Ipv4 / Ipv6</span>
+        <span class="ltag">Routing</span><span class="ltag">Switching</span>
+      </div>
+
+      <div class="sk-sub">// Frameworks &amp; Librairies</div>
+      <div class="lang-grid">
+        <span class="ltag fw">Animated.css</span><span class="ltag fw">Hover.css</span>
+        <span class="ltag fw">jQuery</span><span class="ltag fw">Bootstrap</span>
+      </div>
+    </div>
+
+    <div>
+     <section class="hero">
+        <div class="terminal" id="terminal"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+<span class="sep"></span>
+
+<!-- ══ PROJECTS ══ -->
+<section id="s2">
+  <div class="pr-head">
+    <div>
+      <span class="idx" data-bin="— 03 / PROJETS">— 03 / PROJETS</span>
+      <h2 class="stitle" style="margin-bottom:0"><span data-bin="RÉALISATIONS">RÉALISATIONS</span></h2>
+    </div>
+    <span style="font-family:'Share Tech Mono',monospace;font-size:.52rem;color:var(--muted)">04 PROJETS · CLIQUER POUR DÉTAILS</span>
+  </div>
+  <div class="pr-cards">
+    <div class="pr-card" data-modal="proj1">
+      <img class="pr-card-img" src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=700&q=80" alt="">
+      <div class="pr-card-ov"></div>
+      <div class="pr-body">
+        <div class="pr-num">001 · 2026</div>
+        <div class="pr-title">Refonte de Site D'établissement</div>
+        <div class="pr-client">Projets Scolaires</div>
+        <div class="pr-stack"><span class="pt">HTML/CSS</span><span class="pt">JS</span></div>
+        <div class="pr-hint">[ CLIQUER ]</div>
+      </div>
+    </div>
+    <div class="pr-card" data-modal="proj2">
+      <img class="pr-card-img" src="https://images.unsplash.com/photo-1607706189992-eae578626c86?w=700&q=80" alt="">
+      <div class="pr-card-ov"></div>
+      <div class="pr-body">
+        <div class="pr-num">002 · 2025</div>
+        <div class="pr-title">App Web Planificateur Financier</div>
+        <div class="pr-client">Projets Personel</div>
+        <div class="pr-stack"><span class="pt">HTML:CSS</span><span class="pt">JS</span></div>
+        <div class="pr-hint">[ CLIQUER ]</div>
+      </div>
+    </div>
+    <div class="pr-card" data-modal="proj3">
+      <img class="pr-card-img" src="https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=700&q=80" alt="">
+      <div class="pr-card-ov"></div>
+      <div class="pr-body">
+        <div class="pr-num">003 · 2026</div>
+        <div class="pr-title">Mini Calculatrice</div>
+        <div class="pr-client">Projet Personel</div>
+        <div class="pr-stack"><span class="pt">PHP</span><span class="pt">JS</span></div>
+        <div class="pr-hint">[ CLIQUER ]</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<span class="sep"></span>
+
+<!-- ══ EDUCATION ══ -->
+<section id="s3">
+  <div class="ed-grid">
+    <div>
+      <span class="idx" data-bin="— 04 / FORMATION">— 04 / FORMATION</span>
+      <h2 class="stitle"><span data-bin="FORM">FORM</span><span class="r" data-bin="ATION">ATION</span></h2>
+      <div class="ed-item">
+        <div class="ed-yr">2025<br>→ cours<br>Nîmes</div>
+        <div><div class="ed-deg">Licence Ingénierie Intelligente des Systèmes Informatiques</div><div class="ed-sch">École supérieure de management, d'informatique et de télécommunication</div><span class="ed-badge">EN COURS</span></div>
+      </div>
+      <div class="ed-item">
+      </div>
+      <div class="ed-item">
+        <div class="ed-yr">2022<br>→ 2023<br>Gabon</div>
+        <div><div class="ed-deg">BAC D - Mathématique &amp; Science de la vie et de la Terre</div><div class="ed-sch">Lycée Joseph Amboueroue Avaro</div></div>
+      </div>
+    </div>
+    <div>
+      <br>
+      <span class="idx" data-bin="— LOCALISATION">— LOCALISATION</span>
+      <div class="info-block">📍 Meknès, Maroc<br>🌍 Origine : Gabon<br>SECTEUR B No150 rue 3 EL BASSATINE 50000</div>
+      <br>
+      <span class="idx" data-bin="— INTÉRÊTS">— INTÉRÊTS</span>
+      <div class="lang-grid" style="margin-top:.7rem">
+        <span class="ltag">♟ Dames</span><span class="ltag">💪 Musculation</span>
+        <span class="ltag">⚽ FootBall</span><span class="ltag">🎮 Jeux vidéo</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<span class="sep"></span>
+
+<!-- ══ CONTACT ══ -->
+<section id="s4">
+  <div style="position:relative;z-index:1;">
+    <span class="idx" data-bin="— 05 / CONTACT">— 05 / CONTACT</span>
+    <div class="ct-big">
+      <span data-bin="TRAVAILLONS">TRAVAILLONS</span><br>
+      <span class="outline" data-bin="ENSEMBLE.">ENSEMBLE.</span>
+    </div>
+    <div class="ct-links">
+      <a href="mailto:geordydissakalou26@gmail.com" class="clink primary">✉ geordydissakalou26@gmail.com</a>
+      <a href="tel:0711675090" class="clink">📱 07 11 67 50 90</a>
+      <a href="www.linkedin.com/in/geordy-jordan-aaa359301" target="_blank" class="clink">in LinkedIn</a>
+    </div>
+    <div class="ct-looking">
+      <span class="sdot" style="flex-shrink:0;width:8px;height:8px;"></span>
+      <div class="ct-looking-txt">
+        À la recherche d'un <span>stage</span> ou d'une <span>alternance</span><br>
+         Disponible dès maintenant
+      </div>
+    </div>
+  </div>
+  <div class="ct-deco"><div class="ct-deco-txt">SCIENTIA</div></div>
+</section>
+
+<script>
+// ══ MODAL DATA ══
+const MODALS={
+  proj1:{img:'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=900&q=80',tag:'PROJET · 2026',title:'Refonte Site Etablissement',sub:'Projet Scolaire',desc:"Amélioration complète de l’interface du site avec un design moderne, des animations et une meilleure expérience utilisateur.",sections:[{title:'FONCTIONNALITÉS',type:'list',items:["Refonte du design UI/UX","Animations modernes","Hero slider dynamique","Design responsive mobile / tablette / desktop","Optimisation de l’affichage des blocs"]},{title:'TECHNOLOGIES',type:'tags',items:['HTML5','CSS3','JavaScript (ES6+)','Responsive Design']},{title:'INFOS',type:'grid',items:[{label:'TYPE',val:'Refonte Site Scolaire'},{label:'ANNÉE',val:'2026'},{label:'LIEN',link:'https://supmti-new.netlify.app',val:'Voir' },{label:'CONTEXTE',val:'Projet Scolaire'}]}]},
+  proj2:{img:'https://images.unsplash.com/photo-1607706189992-eae578626c86?w=900&q=80',tag:'PROJET · 2025',title:'APP Web Planificateur Financier ',sub:'Projet Personnal',desc:"Outil de gestion et prévision des finances personnelles",sections:[{title:'FONCTIONNALITÉS',type:'list',items:["Suivi des épargnes","Calcul automatique","Visualisation des données","Interface simple"]},{title:'TECHNOLOGIES',type:'tags',items:['Javascript (ES6+)','HTML5',"CSS3"]},{title:'INFOS',type:'grid',items:[{label:'TYPE',val:'Application Web '},{label:'ANNÉE',val:'2025'},{label:'LIEN',link:'https://planificateur-financier.netlify.app',val:'Voir'},{label:'CONTEXTE',val:'Projet Personel'}]}]},
+  proj3:{img:'https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=900&q=80',tag:'PROJET · 2026',title:'Mini Calculatrice',sub:'Projet personel',desc:"Application web avec historique et gestion avancée des calculs",sections:[{title:'FONCTIONNALITÉS',type:'list',items:["Opérations mathématiques complètes","Historique des calculs","Interface responsive","Gestion des erreurs"]},{title:'TECHNOLOGIES',type:'tags',items:['PHP','Javascript']},{title:'INFOS',type:'grid',items:[{label:'TYPE',val:'Application Web'},{label:'ANNÉE',val:'2026'},{label:'LIEN',link:'https://monprojet.xo.je',val:'Voir'},{label:'CONTEXTE',val:'Projet Personel'}]}]},
+};
+
+// ── CURSOR (desktop) ──
+const $cur=document.getElementById('cur'),$cur2=document.getElementById('cur2');
+let mx=0,my=0,rx=0,ry=0;
+if($cur){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  (function lp(){$cur.style.left=mx+'px';$cur.style.top=my+'px';rx+=(mx-rx)*.1;ry+=(my-ry)*.1;$cur2.style.left=rx+'px';$cur2.style.top=ry+'px';requestAnimationFrame(lp);})();
+}
+
+// ── THEME ──
+const html=document.documentElement;
+const themeBtn=document.getElementById('themeBtn');
+let dark=true;
+themeBtn.addEventListener('click',()=>{
+  dark=!dark;
+  html.setAttribute('data-theme',dark?'dark':'light');
+  themeBtn.textContent=dark?'☀':'☾';
+  // reset bars so they re-animate on next scroll
+  document.querySelectorAll('.bar-fill').forEach(b=>{b.style.transition='none';b.style.width='0';});
+  setTimeout(()=>{document.querySelectorAll('.bar-fill').forEach(b=>{b.style.transition='width 1.6s cubic-bezier(.4,0,.2,1)';});},50);
+  barsAnimated=false;
+});
+
+// ── TOPBAR AUTO-HIDE ──
+// Shows on: load, scroll stop, section change. Hides while actively scrolling.
+const topbar=document.getElementById('topbar');
+let scrollTimer=null,lastY=0,scrolling=false;
+function showBar(){topbar.classList.remove('hidden');}
+function hideBar(){if(!document.getElementById('mobile-menu').classList.contains('open'))topbar.classList.add('hidden');}
+window.addEventListener('scroll',()=>{
+  const y=window.scrollY;
+  if(!scrolling){scrolling=true;showBar();}
+  clearTimeout(scrollTimer);
+  scrollTimer=setTimeout(()=>{scrolling=false;hideBar();},1200);
+  lastY=y;
+},{passive:true});
+// keep visible at very top
+window.addEventListener('scroll',()=>{if(window.scrollY<60)showBar();},{passive:true});
+
+// ── SKILLS MENU ──
+const terminal = document.getElementById("terminal");
+
+const skills = [
+  "JavaScript",
+  "Python",
+  "CSS3",
+  "PHP",
+  "MySQL",
+  "HTML5"
+];
+
+const cybersecurite = [
+  "Kali Linux",
+  "Wireshark",
+  "Aircrack-ng",
+  "Pentesting"
+];
+
+const outils = [
+  "Linux",
+  "Git / Github",
+  "MySQL",
+  "VS CODE"
+]
+
+const reseaux = [
+  "CCNA",
+  "Ipv4 / Ipv6",
+  "Routing",
+  "Switching"
+]
+
+const frameworks = [
+  "Animate.css",
+  "Hover.css",
+  "jQuery",
+  "Boostrap"
+]
+
+// effet typing
+function typeText(text, speed = 30) {
+  return new Promise(resolve => {
+    let i = 0;
+    const line = document.createElement("div");
+    line.classList.add("line");
+    terminal.appendChild(line);
+
+    function typing() {
+      if (i < text.length) {
+        line.textContent += text.charAt(i);
+        i++;
+        setTimeout(typing, speed);
+      } else {
+        resolve();
+      }
+    }
+    typing();
+  });
+}
+
+// scroll auto
+function scrollBottom() {
+  terminal.scrollTop = terminal.scrollHeight;
+
+}
+
+// affichage initial
+async function init() {
+  await typeText("> Initialisation du système...");
+  await typeText("> Portfolio chargé avec succès");
+  await typeText("> Tape 'help' pour voir les commandes");
+  scrollBottom();
+  createInput();
+}
+
+function createInput() {
+  const inputLine = document.createElement("div");
+  inputLine.classList.add("input-line");
+
+  inputLine.innerHTML = `
+    <span>> </span>
+    <input type="text" id="commandInput" autofocus />
+    <span class="cursor"></span>
+  `;
+
+  terminal.appendChild(inputLine);
+  scrollBottom();
+
+  const input = document.getElementById("commandInput");
+
+  input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      handleCommand(input.value);
+      inputLine.remove();
+    }
+  });
+}
+
+async function handleCommand(cmd) {
+  await typeText("> " + cmd);
+
+  switch(cmd.toLowerCase()) {
+
+    case "help":
+      await typeText("Commandes disponibles :");
+      await typeText("cyber     → cybersécurité");
+      await typeText("outils    → outils utilisés");
+      await typeText("reseaux   → compétences réseaux");
+      await typeText("frameworks→ frameworks utilisés");
+      await typeText("clear     → nettoyer");
+      break;
+
+    case "cyber":
+      for (let item of cybersecurite) {
+        await typeText("> " + item + " ✔");
+      }
+      break;
+
+    case "outils":
+      for (let item of outils) {
+        await typeText("> " + item + " ✔");
+      }
+      break;
+
+    case "reseaux":
+      for (let item of reseaux) {
+        await typeText("> " + item + " ✔");
+      }
+      break;
+
+    case "frameworks":
+      for (let item of frameworks) {
+        await typeText("> " + item + " ✔");
+      }
+      break;
+
+    case "clear":
+      terminal.innerHTML = "";
+      break;
+
+    default:
+      await typeText("Commande inconnue. Tape 'help'");
+  }
+
+  createInput();
+}
+
+// lancement
+init();
+
+// ── MOBILE MENU ──
+const burger=document.getElementById('burger');
+const mobileMenu=document.getElementById('mobile-menu');
+burger.addEventListener('click',()=>{
+  const open=mobileMenu.classList.toggle('open');
+  burger.classList.toggle('open',open);
+  showBar();
+});
+mobileMenu.querySelectorAll('a').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const href=a.getAttribute('href');
+    mobileMenu.classList.remove('open');
+    burger.classList.remove('open');
+    const t=document.querySelector(href);
+    if(t)t.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+// ── DESKTOP NAV SMOOTH ──
+document.querySelectorAll('.top-nav a').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const href=a.getAttribute('href');
+    if(href&&href.startsWith('#')){e.preventDefault();const t=document.querySelector(href);if(t)t.scrollIntoView({behavior:'smooth'});}
+  });
+});
+
+// ── BINARY EFFECT ──
+const BIN='01';
+const done=new WeakSet();
+function binaryReveal(el){
+  if(done.has(el))return;
+  done.add(el);
+  const txt=el.dataset.bin;
+  if(!txt)return;
+  el.style.opacity='1';
+  const len=txt.length,FPS=42,DUR=2000,total=Math.round(DUR/(1000/FPS));
+  let f=0;
+  const t=setInterval(()=>{
+    f++;const prog=f/total;let out='';
+    for(let i=0;i<len;i++){
+      const c=txt[i];
+      if(c===' '||c==='\u00A0'){out+=' ';continue;}
+      const cp=i/len;
+      if(prog>=cp+1/len*2)out+=c;
+      else if(prog>=cp)out+=BIN[Math.floor(Math.random()*2)];
+      else out+=Math.random()>.72?BIN[Math.floor(Math.random()*2)]:'\u00A0';
+    }
+    el.textContent=out;
+    if(f>=total){el.textContent=txt;clearInterval(t);}
+  },1000/FPS);
+}
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)binaryReveal(e.target);});
+},{threshold:0.1});
+document.querySelectorAll('[data-bin]').forEach(el=>{el.style.opacity='0';io.observe(el);});
+
+// ── BARS ──
+let barsAnimated=false;
+const barIO=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting&&!barsAnimated){
+      barsAnimated=true;
+      e.target.querySelectorAll('.bar-fill').forEach(b=>{b.style.width=b.dataset.w+'%';});
+    }
+  });
+},{threshold:0.2});
+const s1=document.getElementById('s1');
+if(s1)barIO.observe(s1);
+
+// ── DOT NAV ──
+const secs=document.querySelectorAll('section[id]');
+const dots=document.querySelectorAll('.dot');
+const secIO=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting&&e.intersectionRatio>0.3){
+      dots.forEach(d=>d.classList.toggle('active',d.dataset.target===e.target.id));
+      // show topbar on section change
+      showBar();
+      clearTimeout(scrollTimer);
+      scrollTimer=setTimeout(hideBar,2000);
+    }
+  });
+},{threshold:0.3});
+secs.forEach(s=>secIO.observe(s));
+dots.forEach(d=>{d.addEventListener('click',()=>{const t=document.getElementById(d.dataset.target);if(t)t.scrollIntoView({behavior:'smooth'});});});
+
+// ── LOADER ──
+const lbar=document.getElementById('lbar'),lpct=document.getElementById('lpct'),loader=document.getElementById('loader');
+let p=0;
+const iv=setInterval(()=>{
+  p+=Math.random()*16;
+  if(p>=100){p=100;clearInterval(iv);setTimeout(()=>{loader.style.opacity='0';setTimeout(()=>{loader.style.display='none';},700);},200);}
+  lbar.style.width=p+'%';lpct.textContent=Math.floor(p)+'%';
+},65);
+
+// ── MODAL ──
+function openModal(key){
+  const d=MODALS[key];if(!d)return;
+  document.getElementById('modal-img').src=d.img;
+  let html=`<div class="m-tag">${d.tag}</div><div class="m-title">${d.title}</div><div class="m-sub">${d.sub}</div><div class="m-desc">${d.desc}</div>`;
+  d.sections.forEach(s=>{
+    html+=`<div class="m-sec"><div class="m-sec-title">${s.title}</div>`;
+    if(s.type==='list')html+='<ul class="m-list">'+s.items.map(x=>`<li>${x}</li>`).join('')+'</ul>';
+    else if(s.type==='tags')html+='<div class="m-tags">'+s.items.map(x=>`<span class="m-tag-item">${x}</span>`).join('')+'</div>';
+    else if(s.type==='grid')
+  html+='<div class="m-grid">'+s.items.map(x=>{
+    let value = x.link 
+      ? `<a href="${x.link}" target="_blank" class="m-link">${x.val} ↗</a>` 
+      : x.val;
+
+    return `<div class="m-info">
+      <div class="m-info-lbl">${x.label}</div>
+      <div class="m-info-val">${value}</div>
+    </div>`;
+  }).join('')+'</div>';
+    html+='</div>';
+  });
+  document.getElementById('modal-body').innerHTML=html;
+  document.getElementById('modal').classList.add('open');
+  document.getElementById('modal-box').scrollTop=0;
+  document.body.style.overflow='hidden';
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');document.body.style.overflow='';}
+document.getElementById('modal-close').addEventListener('click',closeModal);
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+document.querySelectorAll('[data-modal]').forEach(el=>el.addEventListener('click',()=>openModal(el.dataset.modal)));
+</script>
+</body>
+</html>
