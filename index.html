@@ -598,6 +598,10 @@ input{background:transparent;border:none;outline:none;color:#00ff9c;font-family:
 </section>
 
 <script>
+  if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+window.scrollTo(0, 0);
 // ══ MODAL DATA ══
 const MODALS={
   proj1:{img:'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=900&q=80',tag:'PROJET · 2026',title:'Refonte Site Etablissement',sub:'Projet Scolaire',desc:"Amélioration complète de l’interface du site avec un design moderne, des animations et une meilleure expérience utilisateur.",sections:[{title:'FONCTIONNALITÉS',type:'list',items:["Refonte du design UI/UX","Animations modernes","Hero slider dynamique","Design responsive mobile / tablette / desktop","Optimisation de l’affichage des blocs"]},{title:'TECHNOLOGIES',type:'tags',items:['HTML5','CSS3','JavaScript (ES6+)','Responsive Design']},{title:'INFOS',type:'grid',items:[{label:'TYPE',val:'Refonte Site Scolaire'},{label:'ANNÉE',val:'2026'},{label:'LIEN',link:'https://supmti-new.netlify.app',val:'Voir' },{label:'CONTEXTE',val:'Projet Scolaire'}]}]},
@@ -705,12 +709,12 @@ function typeText(text, speed = 30) {
 }
 
 
+
 // affichage initial
 async function init() {
   await typeText("> Initialisation du système...");
   await typeText("> Portfolio chargé avec succès");
   await typeText("> Tape 'help' pour voir les commandes");
-  scrollBottom();
   createInput();
 }
 
@@ -720,11 +724,14 @@ function createInput() {
 
   inputLine.innerHTML = `
     <span>> </span>
-    <input type="text" id="commandInput" autofocus />
+    <input type="text" id="commandInput" />
     <span class="cursor"></span>
   `;
-  terminal.appendChild(inputLine);
-  scrollBottom();
+
+terminal.appendChild(inputLine);
+setTimeout(() => {
+  input.focus({ preventScroll: true });
+}, 0);
 
   const input = document.getElementById("commandInput");
 
