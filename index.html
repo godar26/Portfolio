@@ -704,11 +704,6 @@ function typeText(text, speed = 30) {
   });
 }
 
-// scroll auto
-function scrollBottom() {
-  terminal.scrollTop = terminal.scrollHeight;
-
-}
 
 // affichage initial
 async function init() {
@@ -728,7 +723,8 @@ function createInput() {
     <input type="text" id="commandInput" autofocus />
     <span class="cursor"></span>
   `;
-
+  terminal.appendChild(inputLine);
+  scrollBottom();
 
   const input = document.getElementById("commandInput");
 
